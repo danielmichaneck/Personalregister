@@ -31,7 +31,9 @@ namespace Personalregister
                     "0) Lägg till en person i personalregistret.\n" +
                     "1) Vissa personalen i registret i en lista.\n" +
                     "2) Avsluta programmet.\n" +
-                    "3) Ta bort en person ur personalregistret.\n");
+                    "3) Ta bort en person ur personalregistret.\n" +
+                    "4) Visa antal anställa och den totala lönen för alla.\n" +
+                    "5) Rensar personalregistret och kör ett test.");
 
                 switch (int.Parse(Console.ReadLine()))
                 {
@@ -40,10 +42,10 @@ namespace Personalregister
                         Console.WriteLine("\nDu har valt att lägga till en person i personalregistret." +
                             "Vänligen skriv in namnet på personen.");
                         string namn = Console.ReadLine();
-                        Console.WriteLine("Skriv in personens lön");
+                        Console.WriteLine("Skriv in personens lön.");
                         int lön = int.Parse(Console.ReadLine());
                         personalRegister.LäggTillPersonal(new Personal(namn, lön));
-                        Console.WriteLine("{0} med {1:C} i lön har lagts till i personalregistret.", namn, lön);
+                        Console.WriteLine("\n{0} med {1:C} i lön har lagts till i personalregistret.", namn, lön);
                         break;
 
                     case 1:
@@ -53,7 +55,7 @@ namespace Personalregister
                         {
                             personalRegister.SkrivListaÖverPersonalen();
                         }
-                        else Console.WriteLine("Ingen person är tillagd i registret.");
+                        else Console.WriteLine("\nIngen person är tillagd i registret.");
                         break;
 
                     case 2:
@@ -69,7 +71,33 @@ namespace Personalregister
                                 "Vänligen skriv in namnet på personen du vill ta bort.");
                             personalRegister.TaBortPersonal(Console.ReadLine());
                         }
-                        else Console.WriteLine("Ingen person är tillagd i registret.");
+                        else Console.WriteLine("\nIngen person är tillagd i registret.");
+                        break;
+
+                    case 4:
+                        // Skriv ut antal anställda och den sammanlagda lönen för alla.
+                        Console.WriteLine();
+                        if (personalRegister.register.Count > 0)
+                        {
+                            personalRegister.SkrivTotalaLönen();
+                        }
+                        else Console.WriteLine("\nIngen person är tillagd i registret.");
+                        break;
+
+                    case 5:
+                        // Rensar personalregistret och testar
+                        Console.WriteLine("Rensar personalregistret och skriver in ny information som test.\n");
+                        personalRegister = new Register();
+                        personalRegister.LäggTillPersonal(new Personal ("Daniel", 100));
+                        personalRegister.LäggTillPersonal(new Personal ("Daniels katt", 10000));
+                        Console.WriteLine("\nDaniel med 100 kronor i lön har lagts till i registret.\n" +
+                            "Daniels katt med 10 000 kronor i lön har lagts till i registret.\n");
+                        Console.WriteLine("Skriver ut antal anställda och den totala lönen.\n");
+                        personalRegister.SkrivTotalaLönen();
+                        Console.WriteLine("Tar bort Daniel från personalregistret.");
+                        personalRegister.TaBortPersonal("Daniel");
+                        Console.WriteLine("Skriver ut en lista över alla i personalregistret.");
+                        personalRegister.SkrivListaÖverPersonalen();
                         break;
 
                     default:
@@ -106,6 +134,7 @@ namespace Personalregister
 
         public void SkrivListaÖverPersonalen()
         {
+            Console.WriteLine();
             foreach (Personal person in register)
             {
                 Console.WriteLine("{0} {1:C}", person.namn, person.lön);
@@ -115,36 +144,38 @@ namespace Personalregister
         // Extra funktion för att ta bort personer från registret.
         public void TaBortPersonal(string n)
         {
-            if (register.Count > 0)
+            Console.WriteLine();
+            Personal personAttTaBort = register.Find(person => person.namn == n);
+            if (personAttTaBort != null)
             {
-                Personal personAttTaBort = register.Find(person => person.namn == n);
-                if (personAttTaBort != null)
-                {
-                    Console.WriteLine("{0} har tagits bort ur registret.", n);
-                    register.Remove(personAttTaBort);
-                }
-                else Console.WriteLine("{0} finns inte i registret.", n);
+                Console.WriteLine("{0} har tagits bort ur registret.", n);
+                register.Remove(personAttTaBort);
             }
-            else Console.WriteLine("Ingen person är tillagd i registret.");
+            else Console.WriteLine("{0} finns inte i registret.", n);
         }
 
         // Extra funktion för att summera och visa lönen för all personal i registret.
         public void SkrivTotalaLönen()
         {
-            if (register.Count > 0)
+            int totalt = 0;
+            int antalAnställda = 0;
+
+            foreach (Personal person in register)
             {
-                int totalt = 0;
-                int antalAnställda = 0;
-
-                foreach (Personal person in register)
-                {
-                    totalt += person.lön;
-                    antalAnställda++;
-                }
-
-                Console.WriteLine("Det finns {0} personer i registret och de har sammanlagt {1] i lön.", antalAnställda, totalt);
+                totalt += person.lön;
+                antalAnställda++;
             }
-            else Console.WriteLine("Ingen person är tillagd i registret.");
+
+            Console.WriteLine();
+
+            if (antalAnställda == 1)
+            {
+                Console.WriteLine("Det finns 1 person i registret. Personen har {0:C} i lön.", totalt);
+            }
+            else
+            {
+                Console.WriteLine("Det finns {0} personer i registret och de har sammanlagt {1:C} i lön.", antalAnställda, totalt);
+            }
         }
     }
 }
