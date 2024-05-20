@@ -89,9 +89,9 @@ namespace Personalregister
                         Console.WriteLine("Rensar personalregistret och skriver in ny information som test.\n");
                         personalRegister = new Register();
                         personalRegister.LäggTillPersonal(new Personal ("Daniel", 100));
-                        personalRegister.LäggTillPersonal(new Personal ("Daniels katt", 10000));
+                        personalRegister.LäggTillPersonal(new Personal ("Joakim", 10000));
                         Console.WriteLine("\nDaniel med 100 kronor i lön har lagts till i registret.\n" +
-                            "Daniels katt med 10 000 kronor i lön har lagts till i registret.\n");
+                            "Joakim med 10 000 kronor i lön har lagts till i registret.\n");
                         Console.WriteLine("Skriver ut antal anställda och den totala lönen.\n");
                         personalRegister.SkrivTotalaLönen();
                         Console.WriteLine("Tar bort Daniel från personalregistret.");
